@@ -1,12 +1,13 @@
 <template>
     <div class="students-list">
         <ul v-for="work in works" :key="work.id">
-            <li :key="work.id">{{ work.resource_type }}</li>
+            <StudentWork :key="work.id" :work="work" />
         </ul>
     </div>
 </template>
 
 <script>
+import StudentWork from './StudentWork.vue';
 export default {
     name: "StudentsList",
     props: {
@@ -14,6 +15,9 @@ export default {
     },
     methods:  {
 
+    },
+    components: {
+        StudentWork
     }
 };
 </script>
