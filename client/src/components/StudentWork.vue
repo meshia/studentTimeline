@@ -1,5 +1,5 @@
 <template>
-    <li class="student-work">
+    <li class="student-work ">
         <div class="img-wrapper" v-if="work.topic_data">
             <img v-if="work.topic_data.icon_path" :src="`${work.topic_data.icon_path}`" :alt="work.topic_data.name" :class="work.product"/>
             <span v-if="work.product.includes('bpjr')" >Jr.</span>
@@ -75,7 +75,8 @@ export default {
     },
     created() {
         const newDate = new Date(parseInt(this.work.d_created));
-        this.date = `${newDate.toDateString()} • ${newDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        var count = 0;
+        this.date = `${newDate.toLocaleTimeString([], { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'}).replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
     },
 }
 </script>
@@ -85,7 +86,7 @@ export default {
         /* component's css variables */
         --icon-size: 2em;
         --tiny-circle-size: 0.8em;
-        --border-color: #ccc;
+        --component-bg: #ffffff;
         --logo-default-bg: #00C5C4;
         --logo-extra-bg: #F7AE11;
         --logo-tiny-bg: #FEC55A;
@@ -99,7 +100,9 @@ export default {
         border: 1px solid var(--border-color);
         border-radius: 0.3em;
         padding: 1.2em;
+        margin-bottom: 1em;
         text-transform: capitalize;
+        background-color: var(--component-bg);
     }
     .img-wrapper {
         position: relative;
@@ -143,7 +146,7 @@ export default {
         justify-content: center;
         margin-right: auto;
         padding-left: 1em;
-        font-size: 0.9em;
+        font-size: 0.8em;
     }
     .name-date-time h4 {
         margin: 0 0 0.4em 0;

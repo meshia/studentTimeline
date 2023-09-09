@@ -1,14 +1,20 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
+import VersionTwo from '../views/VersionTwo.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    name: 'home',
+    name: 'V1',
     component: Home,
+  },
+  {
+    path: '/VersionTwo',
+    name: 'VersionTwo',
+    component: VersionTwo,
   },
 ];
 
