@@ -10,12 +10,6 @@
 import Header from '@/components/Header.vue';
 import StudentsList from '@/components/StudentsList.vue';
 
-const getDataV1 = async () => {
-  const res = await fetch("http://localhost:3000/activities/v1");
-  const data = await res.json();
-  return data;
-}
-
 export default {
   name: 'home',
   components: {
@@ -27,9 +21,16 @@ export default {
       studentsWorks: []
     }
   },
+  methods: {
+    async getDataV1 () {
+      const res = await fetch("http://localhost:3000/activities/v1");
+      const data = await res.json();
+      return data;
+    }
+  },
   async created() {
     console.log("DATA 1")
-    this.studentsWorks = await getDataV1()
+    this.studentsWorks = await this.getDataV1()
   }
 }
 </script>

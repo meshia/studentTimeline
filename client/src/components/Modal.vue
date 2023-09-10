@@ -12,7 +12,7 @@
                 <span class="date">{{ date }}</span>
             </header>
             <h2 class="comment">{{ data.comment }}</h2>
-            <div class="score">
+            <div v-if="data.score" class="score">
                 <span class="label">Score:</span>
                 <span>{{ `${data.score}/${data.possible_score}` }}</span>
             </div>
@@ -51,7 +51,6 @@ export default {
         }
     },
     mounted() {
-        console.log("Another modal component mounted.");
         this.$nextTick(function(){
             Hub.$on('set-modal-data', this.set);
             Hub.$on('open-modal', this.open)

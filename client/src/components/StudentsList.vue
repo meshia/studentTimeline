@@ -1,7 +1,7 @@
 <template>
     <div class="students-list">
         <ul>
-            <StudentWork v-for="work in works" :key="work.id" :work="work" />
+            <StudentWork v-model="data" v-for="work in parsedData" :key="work.id" :work="work" />
         </ul>
         <Modal />
     </div>
@@ -11,6 +11,8 @@
 import { ref } from 'vue';
 import StudentWork from './StudentWork.vue';
 import Modal from './Modal.vue';
+
+const test = ref(0);
 
 export default {
     name: "StudentsList",
@@ -24,22 +26,20 @@ export default {
     data() {
         return {
             months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-            data: {}
+            data: [...this.works]
         }
     },
-    
-    created() {
-       this.data = ref(this.works);
-       console.log("this.data", this.data)
-      
-    //    if(!this.works.id) {
-    //     const parsedData = this.works.map(({activities, resource_type}) => {
-    //         activities[0].resource_type = resource_type;
-    //         return activities[0];
-    //         })
-    //         console.log("parsedData", parsedData);
-    //         this.data = parsedData;
-    //     }
+    computed: {
+        parsedData(){
+            let data = this.works;
+            if(!this.works[0]?.id) {
+                data = this.works.map(({activities, resource_type}) => {
+                    activities[0].resource_type = resource_type;
+                    return activities[0];
+                })
+            }
+            return data
+        }
     }
 };
 </script>
