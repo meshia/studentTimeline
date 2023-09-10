@@ -13,12 +13,8 @@ import StudentsList from '@/components/StudentsList.vue';
 const getDataV2 = async () => {
   const res = await fetch("http://localhost:3000/activities/v2");
   const data = await res.json();
-  const parsedData = data.map(({activities, resource_type}) => {
-    console.log(activities[0].id)
-    activities[0].resource_type = resource_type;
-    return activities[0];
-  })
-  return parsedData;
+  console.log('data', data)
+  return data;
 }
 
 export default {
