@@ -1,7 +1,10 @@
 <template>
     <div class="students-list">
         <ul>
-            <StudentWork v-model="data" v-for="work in parsedData" :key="work.id" :work="work" />
+            <li v-for="work in parsedData" :key="work.id ? work.id : work.monthTitle" >
+                <StudentWork v-if="work.id" :work="work" />
+                <span class="month-title" v-else>{{ work.monthTitle }}</span>
+            </li>
         </ul>
         <Modal />
     </div>
@@ -31,13 +34,25 @@ export default {
     },
     computed: {
         parsedData(){
-            let data = this.works;
-            if(!this.works[0]?.id) {
-                data = this.works.map(({activities, resource_type}) => {
-                    activities[0].resource_type = resource_type;
-                    return activities[0];
-                })
-            }
+            let data = [];
+            let month = "";
+            this.works.map((item) => {
+                let currItem = item;
+                if(!item?.id) {
+                    item.activities[0].resource_type = item.resource_type;
+                    currItem = item.activities[0]
+                }
+                const newDate = new Date(parseInt(currItem.d_created));
+                const currMonth = newDate.getMonth();
+                if(month !== currMonth) {
+                    month = currMonth;
+                    data.push({ "monthTitle": this.months[currMonth]});
+                    console.log("new month data", data)
+                }
+                data.push(currItem);
+            })
+            
+            console.log("data", data);
             return data
         }
     }
@@ -47,6 +62,7 @@ export default {
 <style>
 .students-list {
     /* component's css variables */
+    --month-title-bg: #FCF7E1;
     --icon-size: 2em;
     --tiny-circle-size: 0.8em;
     --border-color: #ccc;
@@ -63,6 +79,7 @@ export default {
     display: flex;
     flex-direction: column;
     list-style: none;
+    font-size: 0.8em;
 }
 
 .students-list ul:after {
@@ -70,10 +87,26 @@ export default {
     height: 100%;
     width: 1px;
     top: 0;
-    left: 5em;
+    left: 6.4em;
     z-index: -1;
     background-color: var(--border-color);
     content: " ";
+}
+
+.students-list li {
+    display: flex;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.students-list li .month-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1em;
+    padding: 0.5em;
+    width: 5em;
+    background-color: var(--month-title-bg);
 }
 
 .students-list .img-wrapper {

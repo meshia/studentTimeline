@@ -79,9 +79,6 @@ export default {
     },
     created() {
         const newDate = new Date(parseInt(this.work.d_created));
-        if(this.$parent.currMonth !== newDate.getMonth()) {
-            this.$parent.currMonth =  newDate.getMonth();
-        }
         let count = 0;
         this.date = `${newDate.toLocaleTimeString([], { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'}).replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
         this.title = `${this.work.topic_data.name} ${this.work.resource_type.replaceAll("_", " ")}`;
@@ -98,7 +95,6 @@ export default {
         border: 1px solid var(--border-color);
         border-radius: 0.3em;
         padding: 1.2em;
-        margin-bottom: 1em;
         text-transform: capitalize;
         background-color: var(--component-bg);
     }
@@ -110,7 +106,6 @@ export default {
         justify-content: center;
         margin-right: auto;
         padding-left: 1em;
-        font-size: 0.8em;
     }
     .name-date-time h4 {
         margin: 0 0 0.4em 0;
