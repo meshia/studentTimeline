@@ -80,6 +80,7 @@ export default {
     flex-direction: column;
     list-style: none;
     font-size: 0.8em;
+    padding: 0;
 }
 
 .students-list ul:after {
@@ -87,7 +88,7 @@ export default {
     height: 100%;
     width: 1px;
     top: 0;
-    left: 6.4em;
+    left: 3em;
     z-index: -1;
     background-color: var(--border-color);
     content: " ";

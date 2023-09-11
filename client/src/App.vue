@@ -18,17 +18,17 @@
   font-size: 15px;
 }
 
-#nav {
-  padding: 30px;
-}
-
 #nav a {
   font-weight: bold;
   color: #2c3e50;
-  padding: 0 0.5em;
+  padding: 1em;
 }
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.container {
+  margin: 0 2.5em;
 }
 </style>

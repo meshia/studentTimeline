@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home container">
     <Header title="Timeline" />
     <StudentsList :works="studentsWorks" />
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="VersionTwo">
+  <div class="VersionTwo container">
     <Header title="Timeline" />
     <StudentsList :works="studentsWorks" />
   </div>
