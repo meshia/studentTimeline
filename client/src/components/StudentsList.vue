@@ -80,25 +80,26 @@ export default {
         setSelectedFilters(filters) {
             this.selectedFilters = filters;
         },
-        checkModal() {
+        checkModal(data) {
             if(this.$route.params.modal) {
-                console.log("modal", this.$route.params.modal)
-                const currWork = this.parsedData.filter(item => item.title == this.$route.params.modal.toLowerCase())[0];
-                console.log("currWork", currWork)
-                if(currWork) {
+                const currWork = data.filter(item => item.title == this.$route.params.modal.toLowerCase())[0];
+                if(currWork) { 
                     Hub.$emit('open-modal');
                     Hub.$emit('set-modal-data', currWork);
                 }
             } else {
-
+                
             }
         }
     },
     watch: {
         $route(to,from) {
-            this.checkModal();
+        },
+        parsedData: function(data) {
+            this.checkModal(data);
         }
     },
+
     mounted() {
         this.$nextTick(function(){
             Hub.$on('selected-filters', this.setSelectedFilters);
@@ -106,7 +107,7 @@ export default {
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
-        this.checkModal();
+        
     },
     computed: {
         parsedData(){
@@ -200,14 +201,14 @@ export default {
     background-color: var(--month-title-bg);
 }
 
-.students-list .img-wrapper {
+.img-wrapper {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.students-list .img-wrapper img {
+.img-wrapper img {
     height: var(--icon-size);
     width: var(--icon-size);
     padding: 0.4em;
@@ -236,14 +237,14 @@ export default {
     background-color: var(--logo-tiny-bg);
 }
 
-.students-list .score, .students-list .zoom {
+.score, .students-list .zoom {
     display: flex;
     align-items: center;
     color: var(--score-and-zoom);
     font-weight: 600;
 }
 
-.students-list .score .label {
+.score .label {
     font-weight: 400;
     padding-right: 0.2em;
 }

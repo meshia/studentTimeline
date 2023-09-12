@@ -39,10 +39,12 @@ export default {
     methods: {
         close() {
             this.active = false;
+            if(this.$route.params.modal) {
+                this.$router.push('/')
+            }
         },
         open() {
             this.active = true;
-            console.log(this.data)
         },
         set(data) {
             this.data = data;
@@ -130,6 +132,8 @@ header h2 {
 }
 
 .score {
+    display: flex;
+    color: var(--score-and-zoom);
     margin-top: auto;
     font-size: 1.1em;
 }
