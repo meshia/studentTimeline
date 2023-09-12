@@ -2,7 +2,7 @@
     <div class="filters-list">
         <span class="filter-title">Filter by:</span>
         <ul>
-            <li @click="filterClick(filter)" class="filter" v-for="filter in filtersList" :key="filter">
+            <li @click="filterClick(filter)" :class="`filter`" v-for="filter in filtersList" :key="filter">
                 <i class="fa-solid fa-circle-check"></i>
                 {{ filter.replaceAll("_", "-") }}
             </li>
@@ -27,13 +27,23 @@ export default {
         filterClick(filter){
             const index = this.selectedFilters.indexOf(filter);
             if(index === -1){
+                if(filter === "all works") {
+                    this.selectedFilters = [];
+                    const allFilters = event.target.parentNode.querySelectorAll('.filter.active');
+                    allFilters.forEach(element => {
+                        element.classList.remove('active');
+                    });
+                } else if(this.selectedFilters.indexOf("all works") !== -1) {
+                    this.selectedFilters.splice(this.selectedFilters.indexOf("all works"), 1);
+                    const allWorksFilter = event.target.parentNode.querySelectorAll('.filter.active')[0];
+                    allWorksFilter.classList.remove("active");
+                }
                 this.selectedFilters.push(filter);
                 event.target.classList.add("active");
             } else {
                 this.selectedFilters.splice(index, 1);
                 event.target.classList.remove("active");
             }
-            // console.log("Filters", this.selectedFilters, index);
             Hub.$emit('selected-filters', this.selectedFilters)
         }
     }

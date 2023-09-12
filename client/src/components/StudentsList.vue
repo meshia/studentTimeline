@@ -37,48 +37,39 @@ export default {
             activityType: {
                 movie: {
                     score: false,
-                    zoom: false,
-                    filter: false
+                    zoom: false
                 },
                 quiz: {
                     score: true,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 },
                 easy_quiz: {
                     score: false,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 },
                 challenge: {
                     score: false,
-                    zoom: true,
-                    filter: true
+                    zoom: true
                 },
                 make_a_map: {
                     score: false,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 },
                 make_a_movie: {
                     score: false,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 },
                 wordplay :{
                     score: false,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 },
                 related_reading: {
                     score: false,
-                    zoomoom: false,
-                    filter: false
+                    zoomoom: false
                 },
                 draw_about_it: {
                     score: false,
-                    zoom: true,
-                    filter: false
+                    zoom: true
                 }
             },
             filtersList: [],
