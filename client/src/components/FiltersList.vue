@@ -27,13 +27,13 @@ export default {
         filterClick(filter){
             const index = this.selectedFilters.indexOf(filter);
             if(index === -1){
-                if(filter === "all works") {
+                if(filter === "all works") { // "all works" filter special functionality
                     this.selectedFilters = [];
                     const allFilters = event.target.parentNode.querySelectorAll('.filter.active');
                     allFilters.forEach(element => {
                         element.classList.remove('active');
                     });
-                } else if(this.selectedFilters.indexOf("all works") !== -1) {
+                } else if(this.selectedFilters.indexOf("all works") !== -1) { // remove "all works" filter if other filters are active
                     this.selectedFilters.splice(this.selectedFilters.indexOf("all works"), 1);
                     const allWorksFilter = event.target.parentNode.querySelectorAll('.filter.active')[0];
                     allWorksFilter.classList.remove("active");

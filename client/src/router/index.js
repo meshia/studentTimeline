@@ -1,21 +1,26 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
-import VersionTwo from '../views/VersionTwo.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'V1',
-    component: Home,
-  },
-  {
     path: '/VersionTwo',
     name: 'VersionTwo',
-    component: VersionTwo,
+    component: () => import('../views/VersionTwo.vue')
   },
+  {
+    path: '/',
+    name: 'VersionOne',
+    component: Home,
+    children:[
+      {
+        path: ':modal'
+      }
+    ]
+  },
+  
 ];
 
 const router = new VueRouter({

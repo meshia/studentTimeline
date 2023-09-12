@@ -32,7 +32,7 @@ export default {
     },
     data() {
         return {
-            data: this.works,
+            data: [],
             months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
             activityType: {
                 movie: {
@@ -79,6 +79,24 @@ export default {
     methods: {
         setSelectedFilters(filters) {
             this.selectedFilters = filters;
+        },
+        checkModal() {
+            if(this.$route.params.modal) {
+                console.log("modal", this.$route.params.modal)
+                const currWork = this.parsedData.filter(item => item.title == this.$route.params.modal.toLowerCase())[0];
+                console.log("currWork", currWork)
+                if(currWork) {
+                    Hub.$emit('open-modal');
+                    Hub.$emit('set-modal-data', currWork);
+                }
+            } else {
+
+            }
+        }
+    },
+    watch: {
+        $route(to,from) {
+            this.checkModal();
         }
     },
     mounted() {
@@ -88,6 +106,7 @@ export default {
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
+        this.checkModal();
     },
     computed: {
         parsedData(){
@@ -118,7 +137,7 @@ export default {
             //filters the data
             if(this.selectedFilters.indexOf("all works") !== -1 || this.selectedFilters.length === 0) {
                 return data
-            } else {       
+            } else {     
                 return data.filter(item=>{
                     console.log(this.selectedFilters.indexOf(item.resource_type))
                     if(this.selectedFilters.indexOf(item.resource_type) !== -1)
