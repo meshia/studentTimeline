@@ -36,7 +36,6 @@ export default {
     },
     data() {
         return {
-            data: [],
             months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
             activityType: {
                 movie: {
@@ -79,7 +78,8 @@ export default {
             filtersList: [],
             selectedFilters: [],
             searchQuery: "",
-            loadingIndex: 10
+            loadingIndex: 10,
+            deletedIds: []
         }
     },
     methods: {
@@ -96,31 +96,36 @@ export default {
                     Hub.$emit('open-modal');
                     Hub.$emit('set-modal-data', currWork);
                 }
-            } else {
-
             }
         },
         loadMore() {
             this.loadingIndex += 10;
-            console.log("this.loadingIndex", this.loadingIndex)
         },
-        showLoadMore(){
-            return this.works?.length >= this.loadingIndex
+        showLoadMore() {
+            return this.works?.length >= this.loadingIndex &&
+                   (this.selectedFilters.indexOf("all works") !== -1 ||
+                   this.selectedFilters.length === 0)
+        },
+        removeWork(id) {
+            this.deletedIds.push(id);
         }
     },
     watch: {
-        $route(to,from) {
-        },
         parsedData: function(data) {
             this.checkModal(data);
         }
     },
-
     mounted() {
         this.$nextTick(function(){
             Hub.$on('search-input', this.setSearchQuery);
             Hub.$on('selected-filters', this.setSelectedFilters);
+            Hub.$on('remove-work', this.removeWork);
         }.bind(this))
+    },
+    destroyed() {
+        Hub.$off('search-input', this.setSearchQuery);
+        Hub.$off('selected-filters', this.setSelectedFilters);
+        Hub.$off('remove-work', this.removeWork);
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
@@ -130,30 +135,33 @@ export default {
             let data = [];
             let month = "";
             this.works.map((item) => {
-                let currItem = item;
-                if(!item?.id) { //check if the data structure is different
-                    item.activities[0].resource_type = item.resource_type;
-                    currItem = item.activities[0]
+                if(this.deletedIds.indexOf(item.id) === -1) {
+                    let currItem = item;
+                    if(!item?.id) { //check if the data structure is different
+                        item.activities[0].resource_type = item.resource_type;
+                        currItem = item.activities[0]
+                    }
+                    const newDate = new Date(parseInt(currItem.d_created));
+                    const currMonth = newDate.getMonth();
+                    if(month !== currMonth) { // add month title to list
+                        month = currMonth;
+                        data.push({ "monthTitle": this.months[currMonth]});
+                    }
+                    // add parsed data to list items
+                    currItem.title = `${currItem.topic_data.name} ${currItem.resource_type.replaceAll("_", " ")}`;
+                    let count = 0;
+                    currItem.date = `${newDate.toLocaleTimeString([],
+                        { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'})
+                        .replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
+                    currItem.display = this.activityType[currItem.resource_type];
+                    data.push(currItem);
                 }
-                const newDate = new Date(parseInt(currItem.d_created));
-                const currMonth = newDate.getMonth();
-                if(month !== currMonth) { // add month title to list
-                    month = currMonth;
-                    data.push({ "monthTitle": this.months[currMonth]});
-                }
-                // add parsed data to list items
-                currItem.title = `${currItem.topic_data.name} ${currItem.resource_type.replaceAll("_", " ")}`;
-                let count = 0;
-                currItem.date = `${newDate.toLocaleTimeString([],
-                    { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'})
-                    .replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
-                currItem.display = this.activityType[currItem.resource_type];
-                data.push(currItem);
             })
             
-            //filters the data
+            //filters the data and the deleted items
             if(this.selectedFilters.indexOf("all works") === -1 && this.selectedFilters.length !== 0){
                 data = data.filter(item=>{
+                    console.log("in filters parsed data", this.deletedIds, this.deletedIds.indexOf(item.id))
                     if(this.selectedFilters.indexOf(item.resource_type) !== -1)
                         return item       
                 })
@@ -161,8 +169,8 @@ export default {
 
             //search filter
             if(this.searchQuery) {
-                data = data.filter(({title})=>{
-                    return String(title).includes(this.searchQuery)
+                data = data.filter((item)=>{
+                    return String(item.title).includes(this.searchQuery)
                 })
             }
 
@@ -184,7 +192,7 @@ export default {
     --logo-extra-bg: #F7AE11;
     --logo-tiny-bg: #FEC55A;
     --logo-tiny-text: #623518;
-    --score-and-zoom: #019c9c;
+    --hide-score-zoom: #019c9c;
     --filters-and-search: #017575;
     --search-icon: #ffffff;
     --filters-bg: #01757520;
@@ -260,10 +268,10 @@ export default {
     background-color: var(--logo-tiny-bg);
 }
 
-.score, .students-list .zoom {
+.score, .zoom {
     display: flex;
     align-items: center;
-    color: var(--score-and-zoom);
+    color: var(--hide-score-zoom);
     font-weight: 600;
 }
 

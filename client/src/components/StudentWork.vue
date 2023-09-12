@@ -1,5 +1,8 @@
 <template>
-    <li class="student-work" v-if="!work.filter">
+    <li class="student-work" v-if="!work.hide">
+        <div class="hide" @click="handleHide()">
+            <i class="fa fa-eye-slash"></i>
+        </div>
         <div class="img-wrapper" v-if="work.topic_data">
             <img v-if="work.topic_data.icon_path" :src="`${work.topic_data.icon_path}`" :alt="work.topic_data.name" :class="work.product"/>
             <span v-if="work.product.includes('bpjr')" >Jr.</span>
@@ -28,9 +31,12 @@ export default {
         work: Object
     },
     methods:{
-        showZoom(){
+        showZoom() {
             Hub.$emit('open-modal');
             Hub.$emit('set-modal-data', this.work)
+        },
+        handleHide() {
+            Hub.$emit('remove-work', this.work.id)
         }
     }
 }
@@ -48,7 +54,11 @@ export default {
         text-transform: capitalize;
         background-color: var(--component-bg);
     }
-
+    .hide {
+        color: var(--hide-score-zoom);
+        margin: -0.3em 0.5em 0 0;
+        cursor: pointer;
+    }
     .name-date-time {
         display: flex;
         flex-direction: column;

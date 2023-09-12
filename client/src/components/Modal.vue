@@ -133,7 +133,7 @@ header h2 {
 
 .score {
     display: flex;
-    color: var(--score-and-zoom);
+    color: var(--hide-score-zoom);
     margin-top: auto;
     font-size: 1.1em;
 }
