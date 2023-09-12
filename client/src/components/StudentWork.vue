@@ -1,18 +1,18 @@
 <template>
-    <li class="student-work ">
+    <li class="student-work" v-if="!work.filter">
         <div class="img-wrapper" v-if="work.topic_data">
             <img v-if="work.topic_data.icon_path" :src="`${work.topic_data.icon_path}`" :alt="work.topic_data.name" :class="work.product"/>
             <span v-if="work.product.includes('bpjr')" >Jr.</span>
         </div>
         <div class="name-date-time">
-            <h4>{{ title }}</h4>
-            <span>{{ date }}</span>
+            <h4>{{ work.title }}</h4>
+            <span>{{ work.date }}</span>
         </div>
-        <div v-if="activityType[work.resource_type]?.score && work.score" class="score">
+        <div v-if="work.display?.score && work.score" class="score">
             <span class="label">Score:</span>
             <span>{{ `${work.score}/${work.possible_score}` }}</span>
         </div>
-        <div @click="showZoom()" v-if="activityType[work.resource_type]?.zoom" class="zoom">
+        <div @click="showZoom()" v-if="work.display?.zoom" class="zoom">
             <i class="far fa-eye"></i>
             <span>View Work</span>
         </div>
@@ -30,59 +30,9 @@ export default {
     methods:{
         showZoom(){
             Hub.$emit('open-modal');
-            Hub.$emit('set-modal-data', this.work,  this.title, this.date)
+            Hub.$emit('set-modal-data', this.work)
         }
-    },
-    data(){
-        return {
-            date: "",
-            title: "",
-            activityType: {
-                movie: {
-                    score: false,
-                    zoom: false
-                },
-                quiz: {
-                    score: true,
-                    zoom: true
-                },
-                easy_quiz: {
-                    score: false,
-                    zoom: true
-                },
-                challenge: {
-                    score: false,
-                    zoom: true
-                },
-                make_a_map: {
-                    score: false,
-                    zoom: true
-                },
-                make_a_movie: {
-                    score: false,
-                    zoom: true
-                },
-                wordplay :{
-                    score: false,
-                    zoom: true
-                },
-                related_reading: {
-                    score: false,
-                    zoomoom: false
-                },
-                draw_about_it: {
-                    score: false,
-                    zoom: true
-                }
-            }
-        }
-    },
-    created() {
-        const newDate = new Date(parseInt(this.work.d_created));
-        let count = 0;
-        this.date = `${newDate.toLocaleTimeString([], { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'}).replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
-        this.title = `${this.work.topic_data.name} ${this.work.resource_type.replaceAll("_", " ")}`;
-    },
+    }
 }
 </script>
 

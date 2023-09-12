@@ -8,8 +8,8 @@
                 <div class="img-wrapper">
                     <img v-if="data.topic_data.icon_path" :src="`${data.topic_data.icon_path}`" :alt="data.topic_data.name" :class="data.product"/>
                 </div>
-                <h2>{{ title }}</h2>
-                <span class="date">{{ date }}</span>
+                <h2>{{ data.title }}</h2>
+                <span class="date">{{ data.date }}</span>
             </header>
             <h2 class="comment">{{ data.comment }}</h2>
             <div v-if="data.score" class="score">

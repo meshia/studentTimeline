@@ -28,6 +28,11 @@
   color: #42b983;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 .container {
   margin: 0 2.5em;
 }

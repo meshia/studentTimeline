@@ -1,6 +1,7 @@
 <template>
-    <div class="students-list">
-        <ul>
+    <div class="students-list-container">
+        <FiltersList :filtersList="filtersList"/>
+        <ul class="students-list">
             <li v-for="work in parsedData" :key="work.id ? work.id : work.monthTitle" >
                 <StudentWork v-if="work.id" :work="work" />
                 <span class="month-title" v-else>{{ work.monthTitle }}</span>
@@ -13,6 +14,7 @@
 <script>
 import { ref } from 'vue';
 import StudentWork from './StudentWork.vue';
+import FiltersList from './FiltersList.vue';
 import Modal from './Modal.vue';
 
 const test = ref(0);
@@ -24,13 +26,65 @@ export default {
     },
     components: {
         StudentWork,
+        FiltersList,
         Modal
     },
     data() {
         return {
+            data: this.works,
             months: ["January","February","March","April","May","June","July","August","September","October","November","December"],
-            data: [...this.works]
+            activityType: {
+                movie: {
+                    score: false,
+                    zoom: false,
+                    filter: false
+                },
+                quiz: {
+                    score: true,
+                    zoom: true,
+                    filter: false
+                },
+                easy_quiz: {
+                    score: false,
+                    zoom: true,
+                    filter: false
+                },
+                challenge: {
+                    score: false,
+                    zoom: true,
+                    filter: true
+                },
+                make_a_map: {
+                    score: false,
+                    zoom: true,
+                    filter: false
+                },
+                make_a_movie: {
+                    score: false,
+                    zoom: true,
+                    filter: false
+                },
+                wordplay :{
+                    score: false,
+                    zoom: true,
+                    filter: false
+                },
+                related_reading: {
+                    score: false,
+                    zoomoom: false,
+                    filter: false
+                },
+                draw_about_it: {
+                    score: false,
+                    zoom: true,
+                    filter: false
+                }
+            },
+            filtersList: Array
         }
+    },
+    created() {
+        this.filtersList = ["all works", ...Object.keys(this.activityType)];
     },
     computed: {
         parsedData(){
@@ -38,17 +92,23 @@ export default {
             let month = "";
             this.works.map((item) => {
                 let currItem = item;
-                if(!item?.id) {
+                if(!item?.id) { //check if the data structure is different
                     item.activities[0].resource_type = item.resource_type;
                     currItem = item.activities[0]
                 }
                 const newDate = new Date(parseInt(currItem.d_created));
                 const currMonth = newDate.getMonth();
-                if(month !== currMonth) {
+                if(month !== currMonth) { // add month title to list
                     month = currMonth;
                     data.push({ "monthTitle": this.months[currMonth]});
-                    console.log("new month data", data)
                 }
+                // add parsed data to list items
+                currItem.title = `${currItem.topic_data.name} ${currItem.resource_type.replaceAll("_", " ")}`;
+                let count = 0;
+                currItem.date = `${newDate.toLocaleTimeString([],
+                    { month:"short", day:"numeric", year:"numeric", hour: '2-digit', minute:'2-digit'})
+                    .replace(/\,/g, match => ++count === 2 ? ' • ' : match)}`;
+                currItem.display = this.activityType[currItem.resource_type];
                 data.push(currItem);
             })
             
@@ -60,7 +120,7 @@ export default {
 </script>
 
 <style>
-.students-list {
+.students-list-container {
     /* component's css variables */
     --month-title-bg: #FCF7E1;
     --icon-size: 2em;
@@ -72,18 +132,18 @@ export default {
     --logo-tiny-bg: #FEC55A;
     --logo-tiny-text: #623518;
     --score-and-zoom: #019c9c;
+    --filters-and-search: #017575;
+    --filters-bg: #01757520;
 }
 
-.students-list ul {
+.students-list {
     position: relative;
     display: flex;
     flex-direction: column;
-    list-style: none;
     font-size: 0.8em;
-    padding: 0;
 }
 
-.students-list ul:after {
+.students-list:after {
     position: absolute;
     height: 100%;
     width: 1px;
