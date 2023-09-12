@@ -1,5 +1,6 @@
 <template>
     <div class="students-list-container">
+        <SearchBar />
         <FiltersList :filtersList="filtersList"/>
         <ul class="students-list">
             <li v-for="work in parsedData" :key="work.id ? work.id : work.monthTitle" >
@@ -14,6 +15,7 @@
 <script>
 import { ref } from 'vue';
 import StudentWork from './StudentWork.vue';
+import SearchBar from './SearchBar.vue';
 import FiltersList from './FiltersList.vue';
 import Modal from './Modal.vue';
 import Hub from '../events/Hub.vue';
@@ -27,6 +29,7 @@ export default {
     },
     components: {
         StudentWork,
+        SearchBar,
         FiltersList,
         Modal
     },
@@ -73,10 +76,14 @@ export default {
                 }
             },
             filtersList: [],
-            selectedFilters: []
+            selectedFilters: [],
+            searchQuery: ""
         }
     },
     methods: {
+        setSearchQuery(searchQuery) {
+            this.searchQuery = searchQuery;
+        },
         setSelectedFilters(filters) {
             this.selectedFilters = filters;
         },
@@ -88,7 +95,7 @@ export default {
                     Hub.$emit('set-modal-data', currWork);
                 }
             } else {
-                
+
             }
         }
     },
@@ -102,12 +109,12 @@ export default {
 
     mounted() {
         this.$nextTick(function(){
+            Hub.$on('search-input', this.setSearchQuery);
             Hub.$on('selected-filters', this.setSelectedFilters);
         }.bind(this))
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
-        
     },
     computed: {
         parsedData(){
@@ -136,15 +143,21 @@ export default {
             })
             
             //filters the data
-            if(this.selectedFilters.indexOf("all works") !== -1 || this.selectedFilters.length === 0) {
-                return data
-            } else {     
-                return data.filter(item=>{
-                    console.log(this.selectedFilters.indexOf(item.resource_type))
+            if(this.selectedFilters.indexOf("all works") === -1 && this.selectedFilters.length !== 0){
+                data = data.filter(item=>{
                     if(this.selectedFilters.indexOf(item.resource_type) !== -1)
                         return item       
                 })
             }
+
+            //search filter
+            if(this.searchQuery) {
+                data = data.filter(({title})=>{
+                    return String(title).includes(this.searchQuery)
+                })
+            }
+
+            return data
         }
     }
 };
@@ -164,6 +177,7 @@ export default {
     --logo-tiny-text: #623518;
     --score-and-zoom: #019c9c;
     --filters-and-search: #017575;
+    --search-icon: #ffffff;
     --filters-bg: #01757520;
 }
 
