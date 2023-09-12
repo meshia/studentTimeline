@@ -33,11 +33,14 @@ export default {
     methods:{
         showZoom() {
             Hub.$emit('open-modal');
-            Hub.$emit('set-modal-data', this.work)
+            Hub.$emit('set-modal-data', this.work);
         },
         handleHide() {
-            Hub.$emit('remove-work', this.work.id)
+            Hub.$emit('remove-work', this.work.id);
         }
+    },
+    mounted() {
+        Hub.$emit('suggestion-setter', this.work?.topic_data?.name);
     }
 }
 </script>

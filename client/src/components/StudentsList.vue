@@ -1,6 +1,6 @@
 <template>
     <div class="students-list-container">
-        <SearchBar />
+        <SearchBar :suggestionList="suggestionList"/>
         <FiltersList :filtersList="filtersList"/>
         <ul class="students-list">
             <li v-for="work in parsedData" :key="work.id ? work.id : work.monthTitle" >
@@ -14,14 +14,11 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import StudentWork from './StudentWork.vue';
 import SearchBar from './SearchBar.vue';
 import FiltersList from './FiltersList.vue';
 import Modal from './Modal.vue';
 import Hub from '../events/Hub.vue';
-
-const test = ref(0);
 
 export default {
     name: "StudentsList",
@@ -75,6 +72,7 @@ export default {
                     zoom: true
                 }
             },
+            suggestionList: [],
             filtersList: [],
             selectedFilters: [],
             searchQuery: "",
@@ -108,6 +106,9 @@ export default {
         },
         removeWork(id) {
             this.deletedIds.push(id);
+        },
+        suggestionSetter(suggestion) {
+            if(this.suggestionList.indexOf(suggestion) === -1) this.suggestionList.push(suggestion);
         }
     },
     watch: {
@@ -120,15 +121,18 @@ export default {
             Hub.$on('search-input', this.setSearchQuery);
             Hub.$on('selected-filters', this.setSelectedFilters);
             Hub.$on('remove-work', this.removeWork);
+            Hub.$on('suggestion-setter', this.suggestionSetter);
         }.bind(this))
     },
     destroyed() {
         Hub.$off('search-input', this.setSearchQuery);
         Hub.$off('selected-filters', this.setSelectedFilters);
         Hub.$off('remove-work', this.removeWork);
+        Hub.$off('suggestion-setter', this.suggestionSetter);
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
+        
     },
     computed: {
         parsedData(){
@@ -161,7 +165,6 @@ export default {
             //filters the data and the deleted items
             if(this.selectedFilters.indexOf("all works") === -1 && this.selectedFilters.length !== 0){
                 data = data.filter(item=>{
-                    console.log("in filters parsed data", this.deletedIds, this.deletedIds.indexOf(item.id))
                     if(this.selectedFilters.indexOf(item.resource_type) !== -1)
                         return item       
                 })
