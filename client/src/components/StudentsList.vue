@@ -8,6 +8,7 @@
                 <span class="month-title" v-else>{{ work.monthTitle }}</span>
             </li>
         </ul>
+        <button @click="loadMore" v-if="showLoadMore()" class="button">Load More</button>
         <Modal />
     </div>
 </template>
@@ -77,7 +78,8 @@ export default {
             },
             filtersList: [],
             selectedFilters: [],
-            searchQuery: ""
+            searchQuery: "",
+            loadingIndex: 10
         }
     },
     methods: {
@@ -97,6 +99,13 @@ export default {
             } else {
 
             }
+        },
+        loadMore() {
+            this.loadingIndex += 10;
+            console.log("this.loadingIndex", this.loadingIndex)
+        },
+        showLoadMore(){
+            return this.works?.length >= this.loadingIndex
         }
     },
     watch: {
@@ -157,7 +166,7 @@ export default {
                 })
             }
 
-            return data
+            return data.slice(0, this.loadingIndex+1)
         }
     }
 };

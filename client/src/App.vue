@@ -36,4 +36,31 @@ ul {
 .container {
   margin: 0 2.5em;
 }
+
+.button {
+    display: flex;
+    align-content: center;
+    border: 2px solid var(--filters-and-search);
+    border-radius: .3em;
+    padding: .4em .7em;
+    margin: .2em .5em .5em 0;
+    font-weight: 600;
+    color: var(--filters-and-search);
+    text-transform: capitalize;
+    cursor: pointer;
+}
+.button:hover, filter:active {
+    background-color: var(--filters-bg);
+}
+.button.active {
+    background-color: var(--filters-bg);
+}
+.button.active i {
+    display: flex;
+    pointer-events: none;
+}
+.button i {
+    display: none;
+    margin-right: .3em;
+}
 </style>

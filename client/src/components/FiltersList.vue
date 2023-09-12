@@ -2,7 +2,7 @@
     <div class="filters-list">
         <span class="filter-title">Filter by:</span>
         <ul>
-            <li @click="filterClick(filter)" :class="`filter`" v-for="filter in filtersList" :key="filter">
+            <li @click="filterClick(filter)" class="filter button" v-for="filter in filtersList" :key="filter">
                 <i class="fa-solid fa-circle-check"></i>
                 {{ filter.replaceAll("_", "-") }}
             </li>
@@ -62,33 +62,6 @@ ul {
     display: flex;
     flex-flow: row wrap;
     justify-content: flex-start;
-}
-.filter {
-    display: flex;
-    align-content: center;
-    border: 2px solid var(--filters-and-search);
-    border-radius: .3em;
-    padding: .4em .7em;
-    margin: .2em .5em .5em 0;
-    font-weight: 600;
-    color: var(--filters-and-search);
-    text-transform: capitalize;
-    cursor: pointer;
-}
-.filter:hover, filter:active {
-    background-color: var(--filters-bg);
-}
-.filter.active {
-    background-color: var(--filters-bg);
-}
-.filter.active i {
-    display: flex;
-    pointer-events: none;
-}
-
-.filter i {
-    display: none;
-    margin-right: .3em;
 }
 
 </style>
