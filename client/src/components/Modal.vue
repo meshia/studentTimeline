@@ -44,10 +44,8 @@ export default {
             this.active = true;
             console.log(this.data)
         },
-        set(data, title, date) {
+        set(data) {
             this.data = data;
-            this.title = title;
-            this.date = date;
         }
     },
     mounted() {

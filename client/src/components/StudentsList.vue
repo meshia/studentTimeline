@@ -16,6 +16,7 @@ import { ref } from 'vue';
 import StudentWork from './StudentWork.vue';
 import FiltersList from './FiltersList.vue';
 import Modal from './Modal.vue';
+import Hub from '../events/Hub.vue';
 
 const test = ref(0);
 
@@ -80,8 +81,19 @@ export default {
                     filter: false
                 }
             },
-            filtersList: Array
+            filtersList: [],
+            selectedFilters: []
         }
+    },
+    methods: {
+        setSelectedFilters(filters) {
+            this.selectedFilters = filters;
+        }
+    },
+    mounted() {
+        this.$nextTick(function(){
+            Hub.$on('selected-filters', this.setSelectedFilters);
+        }.bind(this))
     },
     created() {
         this.filtersList = ["all works", ...Object.keys(this.activityType)];
@@ -112,8 +124,16 @@ export default {
                 data.push(currItem);
             })
             
-            console.log("data", data);
-            return data
+            //filters the data
+            if(this.selectedFilters.indexOf("all works") !== -1 || this.selectedFilters.length === 0) {
+                return data
+            } else {       
+                return data.filter(item=>{
+                    console.log(this.selectedFilters.indexOf(item.resource_type))
+                    if(this.selectedFilters.indexOf(item.resource_type) !== -1)
+                        return item       
+                })
+            }
         }
     }
 };
